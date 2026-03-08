@@ -32,5 +32,14 @@ Route::middleware('auth')->group(function () { //
 
     // ⭐ NEW: NOTIFICATIONS ROUTES
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     
+});
+
+// ⭐ NEW: ADMIN ROUTES
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
+    Route::patch('/tickets/{ticket}/status', [\App\Http\Controllers\AdminController::class, 'updateStatus'])->name('tickets.updateStatus');
 });
