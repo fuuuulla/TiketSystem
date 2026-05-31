@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://tiketsystem-1.onrender.com'),
+    'url' => env('APP_URL', ''),
     
 
     /*
