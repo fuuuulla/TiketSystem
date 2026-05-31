@@ -32,6 +32,7 @@ MAIL_FROM_ADDRESS="${MAIL_FROM_ADDRESS}"
 MAIL_FROM_NAME="${APP_NAME}"
 EOF
 
+php artisan migrate --force
 php artisan config:cache
 php artisan route:cache
 
