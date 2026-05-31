@@ -28,7 +28,7 @@ class HostingSeeder extends Seeder
         ];
 
         foreach ($hostings as $hosting) {
-            Hosting::create($hosting);
+            Hosting::firstOrCreate(['nom' => $hosting['nom']], $hosting);
         }
     }
 }
