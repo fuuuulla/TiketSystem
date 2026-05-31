@@ -11,6 +11,7 @@ $width = match ($width) {
     '48' => 'w-48',
     default => $width,
 };
+
 @endphp
 
 <div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">

@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Mail\NewTicketMail;
 use App\Models\Hosting;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class TicketController extends Controller
 {
@@ -49,10 +51,14 @@ class TicketController extends Controller
             'statut' => 'pending'
         ]));
 
-        // 3. ⭐ NEW: CRÉER une notification
+        // 3. ⭐ CRÉER une notification
         Auth::user()->notifyTicketCreated($ticket);
 
-        // 4. REDIRECTION avec message
+        // 4. 📧 Envoyer un email à l'administrateur
+        $adminEmail = config('mail.admin_email', env('ADMIN_EMAIL', 'boudoumifella@gmail.com'));
+        Mail::to($adminEmail)->send(new NewTicketMail($ticket));
+
+        // 5. REDIRECTION avec message
         return redirect()->route('dashboard')
             ->with('success', 'Ticket créé avec succès! 🎉');
     } 

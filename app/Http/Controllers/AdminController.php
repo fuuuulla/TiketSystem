@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TicketStatusUpdatedMail;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -50,6 +52,11 @@ class AdminController extends Controller
                 'message' => "Votre demande pour l'hébergement {$ticket->hosting->nom} a été {$statusTrans[$nouveauStatut]}.",
                 'is_read' => false,
             ]);
+
+            // 📧 Envoyer un email au propriétaire du ticket
+            if ($ticket->user && $ticket->user->email) {
+                Mail::to($ticket->user->email)->send(new TicketStatusUpdatedMail($ticket, $nouveauStatut));
+            }
         }
 
         return back()->with('success', 'Statut mis à jour avec succès.');
