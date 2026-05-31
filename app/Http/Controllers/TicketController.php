@@ -55,8 +55,12 @@ class TicketController extends Controller
         Auth::user()->notifyTicketCreated($ticket);
 
         // 4. 📧 Envoyer un email à l'administrateur
-        $adminEmail = config('mail.admin_email', env('ADMIN_EMAIL', 'boudoumifella@gmail.com'));
-        Mail::to($adminEmail)->send(new NewTicketMail($ticket));
+try {
+    $adminEmail = config('mail.admin_email', env('ADMIN_EMAIL', 'boudoumifella@gmail.com'));
+    Mail::to($adminEmail)->send(new NewTicketMail($ticket));
+} catch (\Exception $e) {
+    \Log::error('Email failed: ' . $e->getMessage());
+}
 
         // 5. REDIRECTION avec message
         return redirect()->route('dashboard')
