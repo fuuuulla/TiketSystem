@@ -53,11 +53,19 @@ class AdminController extends Controller
                 'is_read' => false,
             ]);
 
+            
             // 📧 Envoyer un email au propriétaire du ticket
-            if ($ticket->user && $ticket->user->email) {
-                Mail::to($ticket->user->email)->send(new TicketStatusUpdatedMail($ticket, $nouveauStatut));
-            }
+try {
+    if ($ticket->user && $ticket->user->email) {
+        Mail::to($ticket->user->email)->send(new TicketStatusUpdatedMail($ticket, $nouveauStatut));
+    }
+} catch (\Exception $e) {
+    \Log::error('Email failed: ' . $e->getMessage());
+}
         }
+                
+            
+        
 
         return back()->with('success', 'Statut mis à jour avec succès.');
     }
